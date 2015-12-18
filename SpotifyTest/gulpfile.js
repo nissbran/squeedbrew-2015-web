@@ -1,10 +1,25 @@
-﻿/*
-This file in the main entry point for defining Gulp tasks and using Gulp plugins.
-Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
-*/
+﻿var gulp = require('gulp');
 
-var gulp = require('gulp');
+var bowerdir = "./bower_components/";
+var libdir = "./wwwroot/lib/";
 
-gulp.task('default', function () {
-    // place code for your default task here
+var filesToMove = [
+    bowerdir + "polymer/polymer.html"
+];
+
+gulp.task('default', ['move-polymer','move-iron-components'],function () {
+});
+
+gulp.task('move-polymer', function() {
+
+    gulp.src(bowerdir + "polymer/*.html")
+        .pipe(gulp.dest(libdir + "polymer/"));
+
+    gulp.src(bowerdir + "webcomponentsjs/*.js")
+        .pipe(gulp.dest(libdir + "webcomponentsjs/"));
+});
+
+gulp.task('move-iron-components', function() {
+    gulp.src(bowerdir + "iron-*/iron-*.html")
+        .pipe(gulp.dest(libdir));
 });

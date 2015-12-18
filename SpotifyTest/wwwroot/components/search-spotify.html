@@ -1,0 +1,66 @@
+﻿<link rel="import" href="../lib/iron-ajax/iron-ajax.html"/>
+
+<dom-module id="search-spotify">
+    <template>
+        <div class="row">
+            <div class="col-md-2">
+                <label>
+                    Search:
+                </label>
+            </div>
+            <div class="col-md-8">
+                <input class="form-control" value="{{searchTerm::input}}" on-keydown="checkForEnter"/>
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="searchButton" on-click="handleSearchClick" class="btn btn-primary">Skicka</button>
+            </div>
+        </div>
+        <h2>Results</h2>
+        <template is="dom-repeat" items="{{artists.items}}">
+            <div class="row">
+                <div class="col-md-8">
+                    {{item.name}}
+                </div>
+            </div>
+        </template>
+        <iron-ajax id="getArtistsAjax"
+                   url="{{searchSpotifyUrl}}"
+                   handle-as="json"
+                   content-type="application/json"
+                   method="GET"
+                   on-response="handleResponse"
+                   debounce-duration="300"></iron-ajax>
+    </template>
+    <script>
+        Polymer({
+            is: "search-spotify",
+
+            properties: {
+                searchTerm: {
+                    type: String,
+                    observer: "_searchChanged"
+                },
+                searchSpotifyUrl: {
+                    type: String
+                },
+                artists: {
+                    type: Object
+                }
+            },
+            _searchChanged: function (newValue, oldValue) {
+                this.searchSpotifyUrl = 'https://api.spotify.com/v1/search?q=' + encodeURIComponent(newValue) + '&type=artist';
+            },
+            checkForEnter: function (e) {
+                if (e.keyCode === 13) {
+                    this.handleSearchClick(e);
+                }
+            },
+            handleSearchClick: function(e) {
+                this.$.getArtistsAjax.generateRequest();
+            },
+            handleResponse: function (data) {
+                this.artists = data.detail.response.artists;
+            }
+        })
+    </script>
+</dom-module>

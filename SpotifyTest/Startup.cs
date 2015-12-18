@@ -6,24 +6,20 @@ using Microsoft.Extensions.DependencyInjection;
 namespace SpotifyTest
 {
     public class Startup
-    { 
+    {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvcCore();
+            services.AddMvc();
         }
-    
+
         public void Configure(IApplicationBuilder app)
         {
             app.UseIISPlatformHandler();
 
             app.UseStaticFiles();
 
-            //app.UseMvc();
-
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World 3!");
-            });
+            app.UseMvc(routes =>
+                routes.MapRoute("Default", "{controller=home}/{action=index}"));
         }
 
         public static void Main(string[] args) => WebApplication.Run<Startup>(args);
