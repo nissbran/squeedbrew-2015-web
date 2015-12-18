@@ -9,7 +9,7 @@ namespace SpotifyTest
     { 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvcCore()   
+            services.AddMvcCore();
         }
     
         public void Configure(IApplicationBuilder app)
